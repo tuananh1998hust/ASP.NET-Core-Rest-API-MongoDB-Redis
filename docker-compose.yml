@@ -1,0 +1,35 @@
+version: "3.4"
+services:
+  asp_net_core:
+    container_name: asp_net_core
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - mvc_cache
+      - mvc_db
+    networks:
+      - dotnet
+
+  mvc_db:
+    container_name: mvc_db
+    image: mongo:4.2.0-bionic
+    ports:
+      - 27019:27017
+    volumes:
+      - ./volumes/db:/data/db
+    networks:
+      - dotnet
+
+  mvc_cache:
+    container_name: mvc_cache
+    image: redis:5-alpine
+    ports:
+      - 6300:6379
+    volumes:
+      - ./volumes/cache:/data
+    networks:
+      - dotnet
+
+networks:
+  dotnet:
